@@ -3,6 +3,7 @@ package com.solvd.files;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
@@ -18,12 +19,14 @@ public class MyFileUtils {
 	
 	public MyFileUtils() {}
 	
-	//this method replaces common separators with blank spaces
-	public static String cleanString(String string) {
+	//this method replaces common separators with blank spaces, converts the string to uppercase and returns the array resulted from splitting the text using whitespace as separator 
+	public static String[] cleanStringToArray(String string) {
 		for (String separator : separators) {
 			string = string.replace(separator, " ");
 		}
-		return string;
+		string = StringUtils.upperCase(string);
+		String [] tmpArray = StringUtils.split(string);
+		return tmpArray;
 	}
 	
 	/*this method allows string overlap. for example, if "the" counts as a word and there are other words containing "the", such as "there" or "they", this method
@@ -31,9 +34,7 @@ public class MyFileUtils {
 	public static void countWordOccurrences(File textFile) throws IOException{
 		LOGGER.info("Counting word occurrences in file allowing string overlap: "+textFile.getName());
 		String string = FileUtils.readFileToString(textFile, "UTF-8");
-		string = StringUtils.upperCase(string);
-		string = MyFileUtils.cleanString(string);
-		String[] list = StringUtils.split(string);
+		String[] list = MyFileUtils.cleanStringToArray(string);
 		Set <String> set = new HashSet <String>(Arrays.asList(list));
 		FileUtils.writeStringToFile(textFile, "\nOCCURRENCES OF WORDS IN THE FILE\n","UTF-8", true);
 		for (String word : set) {
@@ -45,14 +46,13 @@ public class MyFileUtils {
 	public static void countWordsNoOverlap(File textFile) throws IOException {
 		LOGGER.info("Counting word occurrences in file without allowing string overlap: "+textFile.getName());
 		String string = FileUtils.readFileToString(textFile, "UTF-8");
-		string = MyFileUtils.cleanString(string);
-		String[] list = StringUtils.split(string);
+		String[] list = MyFileUtils.cleanStringToArray(string);
 		Set <String> set = new HashSet <String>(Arrays.asList(list));
 		FileUtils.writeStringToFile(textFile, "\n\nOCCURRENCES OF WORDS IN THE FILE\n","UTF-8", true);
 		for (String notDuplicatedWord : set) {
 			int count = 0;
 			for (String word : list ) {
-				if (StringUtils.equalsIgnoreCase(notDuplicatedWord, word)) { //used equalsIgnoreCase instead of upperCase method
+				if (StringUtils.equals(notDuplicatedWord, word)) { 
 					count++;
 				}
 			}
@@ -64,11 +64,30 @@ public class MyFileUtils {
 	for example, according to this, "you" and "you." are two different words. it also allows string overlap */
 	public static void countWordsSimpleWay (File textFile) throws IOException{
 		String string = FileUtils.readFileToString(textFile, "UTF-8");
-		string = StringUtils.upperCase(string);
-		String[] list = StringUtils.split(string);
+		String[] list = MyFileUtils.cleanStringToArray(string);
 		Set <String> set = new HashSet <String>(Arrays.asList(list));
 		for (String word : set) {
 			FileUtils.writeStringToFile(textFile,"\n"+ word+": "+StringUtils.countMatches(string, word), "UTF-8", true);
 		}
+	}
+	
+	public static void countWordsHashMap (File textFile) throws IOException {
+		String string = FileUtils.readFileToString(textFile, "UTF-8");
+		HashMap <String, Integer> tmpMap = new HashMap <String, Integer>();
+		String[] list = MyFileUtils.cleanStringToArray(string);
+		for(String word : list) {
+			if (tmpMap.containsKey(word)) {
+				tmpMap.put(word, tmpMap.get(word)+1);
+			}
+			tmpMap.putIfAbsent(word,1);	
+		}
+		FileUtils.writeStringToFile(textFile, "\n\nOCCURRENCES OF WORDS IN THE FILE\n","UTF-8", true);
+		tmpMap.forEach((word, count)-> {
+			try {
+				FileUtils.writeStringToFile(textFile,"\n"+ word+": "+count, "UTF-8", true);
+			} catch (IOException e) {
+				LOGGER.error(e);
+			}
+		});
 	}
 }
