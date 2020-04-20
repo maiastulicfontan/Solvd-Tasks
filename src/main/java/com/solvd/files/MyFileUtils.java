@@ -14,13 +14,13 @@ import org.apache.logging.log4j.Logger;
 public class MyFileUtils {
 	
 	private static final Logger LOGGER = LogManager.getLogger(MyFileUtils.class);
-	private static final String[] separator = {".", "," , ":" , ";" , "(" , ")" , "-"};
+	private static final String[] separators = {".", "," , ":" , ";" , "(" , ")" , "-"};
 	
 	public MyFileUtils() {}
 	
 	//this method replaces common separators with blank spaces
 	public static String cleanString(String string) {
-		for (String separator : separator) {
+		for (String separator : separators) {
 			string = string.replace(separator, " ");
 		}
 		return string;
