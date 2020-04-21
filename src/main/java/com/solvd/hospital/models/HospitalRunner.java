@@ -45,7 +45,7 @@ public class HospitalRunner {
 		docA.setSalary(5000.00);
 		Doctor docB = new Doctor ("Edward", "Harris", rd.nextInt(99999), 4568754698L, Specialty.URO);
 		docB.setSalary(4500.00);
-		Doctor docC = new Doctor ("Mary","Jane", rd.nextInt(99999), 1115863245L, Specialty.DERM);
+		Doctor docC = new Doctor ("Mary","Bell", rd.nextInt(99999), 1115863245L, Specialty.DERM);
 		Doctor docD = new Doctor ("Edward", "Johnson", rd.nextInt(99999), 4568754698L, Specialty.URO);
 		Nurse nurseA = new Nurse ("Carl", "Miller", rd.nextInt(99999), rd.nextInt(9999999));
 		Nurse nurseB = new Nurse ("Frank", "Jameson", rd.nextInt(99999), rd.nextInt(9999999));
