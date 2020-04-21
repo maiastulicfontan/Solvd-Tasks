@@ -35,7 +35,7 @@ public class HospitalRunner {
 		Random rd = new Random();
 				
 		//initializing Private Hospitals
-		PrivateHospital privHospA = new PrivateHospital("St. Patrick Hospital");
+		PrivateHospital privHospA = new PrivateHospital("St. Patrick's Hospital");
 		privHospA.getAccount().setBalance(1000000.00);
 		
 		PrivateHospital privHospB = new PrivateHospital("St. Mary's Private Hospital", -87);
@@ -44,6 +44,7 @@ public class HospitalRunner {
 		Doctor docA = new Doctor ("Katy","Hodges", rd.nextInt(99999), 2117863245L, Specialty.CARD);
 		docA.setSalary(5000.00);
 		Doctor docB = new Doctor ("Edward", "Johnson", rd.nextInt(99999), 4568754698L, Specialty.URO);
+		docB.setSalary(4500.00);
 		Doctor docC = new Doctor ("Mary","Jane", rd.nextInt(99999), 1115863245L, Specialty.DERM);
 		Doctor docD = new Doctor ("Edward", "Johnson", rd.nextInt(99999), 4568754698L, Specialty.URO);
 		Nurse nurseA = new Nurse ("Carl", "Miller", rd.nextInt(99999), rd.nextInt(9999999));
@@ -113,6 +114,7 @@ public class HospitalRunner {
 		
 		accA.payEmployee(privHospA, nurseA);
 		
+		
 		//lambdas
 		Calculator<PrivateHospital, Double> calculateAppointmentsIncome = (tmpPrivHosp) -> {
 			double total = 0;	
@@ -122,9 +124,11 @@ public class HospitalRunner {
 			return total;
 		};
 		
-		Modifier<Employee,Double> increaser = (employee, percentage) -> employee.setSalary(employee.getSalary()+employee.getSalary()*percentage/100);
+		Modifier<Employee,Double> increaserByPercentage = (employee, percentage) -> employee.setSalary(employee.getSalary()+employee.getSalary()*percentage/100);
+		Modifier<Employee,Double> increaserByAmount = (employee, amount) -> employee.setSalary(employee.getSalary()+amount);
 		
-		accA.increaseSalary(docA, 5,increaser);
+		accA.increaseSalary(docA, 5,increaserByPercentage);
+		accA.increaseSalary(docB, 300, increaserByAmount);
 		
 		Printer<Hospital> doctorPrinter = hospital -> hospital.getDoctors().forEach((doctor)->LOGGER.info(doctor));
 		  

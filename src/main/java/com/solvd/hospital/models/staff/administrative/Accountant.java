@@ -26,9 +26,9 @@ public class Accountant extends Administrative {
 		}
 	}
 	
-	public void increaseSalary(Employee emp, double percentage, Modifier<Employee,Double> increaser) {
+	public void increaseSalary(Employee emp, double amount, Modifier<Employee,Double> increaser) {
 		LOGGER.info("Increasing salary of "+emp.getFirstName()+" "+emp.getLastName()+ ". Previous salary: $"+emp.getSalary());
-		increaser.modify(emp, percentage);
+		increaser.modify(emp, amount);
 		LOGGER.info("New salary: $"+emp.getSalary());
 	}
 	
