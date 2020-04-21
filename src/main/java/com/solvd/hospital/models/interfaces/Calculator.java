@@ -1,6 +1,6 @@
 package com.solvd.hospital.models.interfaces;
 
 @FunctionalInterface
-public interface Printable<T> {
-	void print();
+public interface Calculator<T,N> {
+	 N calculate(T type);
 }

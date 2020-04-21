@@ -7,6 +7,10 @@ import com.solvd.hospital.models.enums.Specialty;
 import com.solvd.hospital.models.exceptions.AppointmentNotFoundException;
 import com.solvd.hospital.models.exceptions.EmployeeNotFoundException;
 import com.solvd.hospital.models.healthfacilities.PrivateHospital;
+import com.solvd.hospital.models.healthfacilities.Hospital;
+import com.solvd.hospital.models.interfaces.Calculator;
+import com.solvd.hospital.models.interfaces.Printer;
+import com.solvd.hospital.models.patientrelated.Appointment;
 import com.solvd.hospital.models.patientrelated.Patient;
 import com.solvd.hospital.models.staff.administrative.Accountant;
 import com.solvd.hospital.models.staff.administrative.Receptionist;
@@ -29,23 +33,31 @@ public class HospitalRunner {
 		Random rd = new Random();
 				
 		//initializing Private Hospitals
-		PrivateHospital privHosp = new PrivateHospital("St. Patrick Hospital");
-		privHosp.getAccount().setBalance(1000000.00);
+		PrivateHospital privHospA = new PrivateHospital("St. Patrick Hospital");
+		privHospA.getAccount().setBalance(1000000.00);
 		
-		PrivateHospital privHospB = new PrivateHospital("St. Mary's", -87);
+		PrivateHospital privHospB = new PrivateHospital("St. Mary's Private Hospital", -87);
 		
 		//initializing employees
 		Doctor docA = new Doctor ("Katy","Hodges", rd.nextInt(99999), 2117863245L, Specialty.CARD);
 		Doctor docB = new Doctor ("Edward", "Johnson", rd.nextInt(99999), 4568754698L, Specialty.URO);
+		Doctor docC = new Doctor ("Mary","Jane", rd.nextInt(99999), 1115863245L, Specialty.DERM);
+		Doctor docD = new Doctor ("Edward", "Johnson", rd.nextInt(99999), 4568754698L, Specialty.URO);
 		Nurse nurseA = new Nurse ("Carl", "Miller", rd.nextInt(99999), rd.nextInt(9999999));
+		Nurse nurseB = new Nurse ("Frank", "Jameson", rd.nextInt(99999), rd.nextInt(9999999));
 		Receptionist recA = new Receptionist ("Sarah","Paulson",rd.nextInt(99999));
 		Accountant accA = new Accountant ("Marcellus", "Wallace", rd.nextInt(99999));
 		
-		privHosp.addDoctor(docA);
-		privHosp.addDoctor(docB);
-		privHosp.addNurse(nurseA);
-		privHosp.addAdministrative(recA);
-		privHosp.addAdministrative(accA);
+		privHospA.addDoctor(docA);
+		privHospA.addDoctor(docB);
+		privHospA.addNurse(nurseA);
+		privHospA.addAdministrative(recA);
+		privHospA.addAdministrative(accA);
+		
+		
+		privHospB.addDoctor(docC);
+		privHospB.addDoctor(docD);
+		privHospB.addNurse(nurseB);
 			
 		//initializing patients
 		Patient patA = new Patient ("Mary", "Brown", LocalDate.of(1985,03,11), Gender.F, BloodType.AB_POS, 30000.00);
@@ -54,10 +66,10 @@ public class HospitalRunner {
 		Patient patD = new Patient ("Jane", "Doe", LocalDate.of(1995,06, 29), Gender.F, BloodType.UNKNOWN);
 	
 		//adding appointments
-		recA.addAppointment(privHosp, LocalDate.of(2020,03,28), LocalTime.of(9, 30), docB, patB, 150);
-		recA.addAppointment(privHosp, LocalDate.of(2020,04,28), LocalTime.of(14,30), docA, patA, 200);		
-		recA.addAppointment(privHosp, LocalDate.of(2020,04,10), LocalTime.of(17,00), docB, patC, 150);
-		recA.addAppointment(privHosp, LocalDate.of(2020,04,15), LocalTime.of(11,00), docB, patD, 170);
+		recA.addAppointment(privHospA, LocalDate.of(2020,03,28), LocalTime.of(9, 30), docB, patB, 150);
+		recA.addAppointment(privHospA, LocalDate.of(2020,04,28), LocalTime.of(14,30), docA, patA, 200);		
+		recA.addAppointment(privHospA, LocalDate.of(2020,04,10), LocalTime.of(17,00), docB, patC, 150);
+		recA.addAppointment(privHospA, LocalDate.of(2020,04,15), LocalTime.of(11,00), docB, patD, 170);
 		
 		/* Some exception handling notes: i haven't declared 'throws' in my methods since these exceptions are runtime ones,
 		 * similar to NullPointerException or ArithmeticException. Also I'm aware that i could have managed these situations within
@@ -66,7 +78,7 @@ public class HospitalRunner {
 		 here*/
 		//trying to remove an appointment that doesn't belong to the hospital
 		try {
-			recA.removeAppointment(privHospB,privHosp.getAppoints().get(1));
+			recA.removeAppointment(privHospB,privHospA.getAppoints().get(1));
 		} catch (AppointmentNotFoundException e){
 			LOGGER.error(e);
 		}
@@ -96,10 +108,20 @@ public class HospitalRunner {
 		}
 		nurseA.curePatient(patC, Disease.getRandomDisease());
 		
-		accA.payEmployee(privHosp, nurseA);
+		accA.payEmployee(privHospA, nurseA);
 		
-		//printing doctor and patient information
-		LOGGER.info(patA);
-		privHosp.getDoctors().forEach((doctor)-> LOGGER.info(doctor)); {}  
+		//lambdas
+		Calculator<PrivateHospital, Double> calculateAppointmentIncome = (tmpPrivHosp) -> {
+			double total = 0;	
+			for (Appointment appoints : tmpPrivHosp.getAppoints()) {
+				total = total + appoints.getCost();
+			}
+			return total;
+		};
+		
+		Printer<Hospital> doctorPrinter = hospital -> hospital.getDoctors().forEach((doctor)->LOGGER.info(doctor));
+		  
+		LOGGER.info("Total appointments' income in "+privHospA.getName()+": $"+calculateAppointmentIncome.calculate(privHospA));
+		doctorPrinter.print(privHospA);
 	}
 }
