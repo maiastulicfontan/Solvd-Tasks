@@ -23,6 +23,7 @@ public abstract class Hospital {
 	private List<Receptionist> recs = new ArrayList<Receptionist>();
 	private List<Appointment> appoints = new ArrayList<Appointment>();
 	
+	
 	//constructors
 	public Hospital () { }
 	

@@ -8,6 +8,7 @@ import com.solvd.hospital.models.exceptions.AppointmentNotFoundException;
 import com.solvd.hospital.models.exceptions.EmployeeNotFoundException;
 import com.solvd.hospital.models.healthfacilities.PrivateHospital;
 import com.solvd.hospital.models.healthfacilities.Hospital;
+import com.solvd.hospital.models.interfaces.functionalinterfaces.BiChecker;
 import com.solvd.hospital.models.interfaces.functionalinterfaces.Calculator;
 import com.solvd.hospital.models.interfaces.functionalinterfaces.Modifier;
 import com.solvd.hospital.models.interfaces.functionalinterfaces.Printer;
@@ -21,7 +22,6 @@ import com.solvd.hospital.models.staff.medicalstaff.Nurse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Random;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,7 +43,7 @@ public class HospitalRunner {
 		//initializing employees
 		Doctor docA = new Doctor ("Katy","Hodges", rd.nextInt(99999), 2117863245L, Specialty.CARD);
 		docA.setSalary(5000.00);
-		Doctor docB = new Doctor ("Edward", "Johnson", rd.nextInt(99999), 4568754698L, Specialty.URO);
+		Doctor docB = new Doctor ("Edward", "Harris", rd.nextInt(99999), 4568754698L, Specialty.URO);
 		docB.setSalary(4500.00);
 		Doctor docC = new Doctor ("Mary","Jane", rd.nextInt(99999), 1115863245L, Specialty.DERM);
 		Doctor docD = new Doctor ("Edward", "Johnson", rd.nextInt(99999), 4568754698L, Specialty.URO);
@@ -135,5 +135,13 @@ public class HospitalRunner {
 		LOGGER.info("Total appointments' income in "+privHospA.getName()+": $"+calculateAppointmentsIncome.calculate(privHospA));
 		
 		doctorPrinter.print(privHospA);
+		
+		BiChecker<Doctor,String> checkDoctorLastName = (doctor, prefix)-> doctor.getLastName().startsWith(prefix);
+		
+		privHospB.getDoctors().forEach((doctor)->{
+			if (checkDoctorLastName.check(doctor, "J")) {
+				LOGGER.info(doctor.getLastName());
+			}
+		});
 	}
 }
