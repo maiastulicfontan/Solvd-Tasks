@@ -118,6 +118,7 @@ public class HospitalRunner {
 		//lambdas
 		Calculator<PrivateHospital, Double> calculateAppointmentsIncome = (tmpPrivHosp) -> {
 			double total = 0;	
+			//privHosp.getAppoints().stream().
 			for (Appointment appoints : tmpPrivHosp.getAppoints()) {
 				total = total + appoints.getCost();
 			}

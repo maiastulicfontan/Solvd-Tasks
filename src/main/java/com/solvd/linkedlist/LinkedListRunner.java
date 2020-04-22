@@ -37,5 +37,8 @@ public class LinkedListRunner {
 		listC.addFirst("hi");
 		LOGGER.info("List head: "+ listC.getHead());
 		LOGGER.info("Last element: "+ listC.getLast());
+		
+		LinkedList <String> listD = new LinkedList<String>();
+		listD.iterate();
 	}
 }

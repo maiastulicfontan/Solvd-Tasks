@@ -12,15 +12,12 @@ import org.apache.logging.log4j.Logger;
 public class MyFileUtils {
 	
 	private static final Logger LOGGER = LogManager.getLogger(MyFileUtils.class);
-	private static final String[] separators = {".", "," , ":" , ";" , "(" , ")" , "-"};
 	
 	public MyFileUtils() {}
 	
 	//this method replaces common separators with blank spaces, converts the string to uppercase and returns the array resulted from splitting the text using whitespace as separator 
 	public static String[] cleanStringToArray(String string) {
-		for (String separator : separators) {
-			string = string.replace(separator, " ");
-		}
+		string = StringUtils.replaceEach(string, new String[] {".", "," , ":" , ";" , "(" , ")" , "-", "?"}, new String[]{" ", " " , " " , " " , " " , " " , " ", " "});
 		string = StringUtils.upperCase(string);
 		String [] tmpArray = StringUtils.split(string);
 		return tmpArray;

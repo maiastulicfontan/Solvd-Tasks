@@ -26,7 +26,7 @@ public class LinkedList <E> {
 				LOGGER.info(tmp);
 			}
 		} else {
-			throw new NullPointerException("Can't iterate through an empty list");
+			throw new EmptyListException("Can't iterate through an empty list");
 		}		
 	}
 	
@@ -40,7 +40,7 @@ public class LinkedList <E> {
 				LOGGER.info(tmp);
 			}
 		} else {
-			throw new NullPointerException("Can't iterate through an empty list");
+			throw new EmptyListException("Can't iterate through an empty list");
 		}		
 	}
 	
