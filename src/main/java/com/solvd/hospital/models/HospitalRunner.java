@@ -8,10 +8,10 @@ import com.solvd.hospital.models.exceptions.AppointmentNotFoundException;
 import com.solvd.hospital.models.exceptions.EmployeeNotFoundException;
 import com.solvd.hospital.models.healthfacilities.PrivateHospital;
 import com.solvd.hospital.models.healthfacilities.Hospital;
-import com.solvd.hospital.models.interfaces.functionalinterfaces.BiChecker;
-import com.solvd.hospital.models.interfaces.functionalinterfaces.Calculator;
-import com.solvd.hospital.models.interfaces.functionalinterfaces.Modifier;
-import com.solvd.hospital.models.interfaces.functionalinterfaces.Printer;
+import com.solvd.hospital.models.interfaces.functionalinterfaces.IBiCheck;
+import com.solvd.hospital.models.interfaces.functionalinterfaces.ICalculate;
+import com.solvd.hospital.models.interfaces.functionalinterfaces.IModify;
+import com.solvd.hospital.models.interfaces.functionalinterfaces.IPrint;
 import com.solvd.hospital.models.patientrelated.Appointment;
 import com.solvd.hospital.models.patientrelated.Patient;
 import com.solvd.hospital.models.staff.Employee;
@@ -116,7 +116,7 @@ public class HospitalRunner {
 		
 		
 		//lambdas
-		Calculator<PrivateHospital, Double> calculateAppointmentsIncome = (tmpPrivHosp) -> {
+		ICalculate<PrivateHospital, Double> calculateAppointmentsIncome = (tmpPrivHosp) -> {
 			double total = 0;	
 			//privHosp.getAppoints().stream().
 			for (Appointment appoints : tmpPrivHosp.getAppoints()) {
@@ -125,19 +125,19 @@ public class HospitalRunner {
 			return total;
 		};
 		
-		Modifier<Employee,Double> increaserByPercentage = (employee, percentage) -> employee.setSalary(employee.getSalary()+employee.getSalary()*percentage/100);
-		Modifier<Employee,Double> increaserByAmount = (employee, amount) -> employee.setSalary(employee.getSalary()+amount);
+		IModify<Employee,Double> increaserByPercentage = (employee, percentage) -> employee.setSalary(employee.getSalary()+employee.getSalary()*percentage/100);
+		IModify<Employee,Double> increaserByAmount = (employee, amount) -> employee.setSalary(employee.getSalary()+amount);
 		
 		accA.increaseSalary(docA, 5,increaserByPercentage);
 		accA.increaseSalary(docB, 300, increaserByAmount);
 		
-		Printer<Hospital> doctorPrinter = hospital -> hospital.getDoctors().forEach((doctor)->LOGGER.info(doctor));
+		IPrint<Hospital> doctorPrinter = hospital -> hospital.getDoctors().forEach((doctor)->LOGGER.info(doctor));
 		  
 		LOGGER.info("Total appointments' income in "+privHospA.getName()+": $"+calculateAppointmentsIncome.calculate(privHospA));
 		
 		doctorPrinter.print(privHospA);
 		
-		BiChecker<Doctor,String> checkDoctorLastName = (doctor, prefix)-> doctor.getLastName().startsWith(prefix);
+		IBiCheck<Doctor,String> checkDoctorLastName = (doctor, prefix)-> doctor.getLastName().startsWith(prefix);
 		
 		privHospB.getDoctors().forEach((doctor)->{
 			if (checkDoctorLastName.check(doctor, "J")) {

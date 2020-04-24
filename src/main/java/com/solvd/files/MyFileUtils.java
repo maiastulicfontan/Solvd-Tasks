@@ -22,7 +22,6 @@ public class MyFileUtils {
 		String [] tmpArray = StringUtils.split(string);
 		return tmpArray;
 	}
-	
 
 	public static void countWords (File textFile) throws IOException {
 		LOGGER.info("Counting words in text file...");

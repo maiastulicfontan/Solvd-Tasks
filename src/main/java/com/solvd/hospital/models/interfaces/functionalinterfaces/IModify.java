@@ -1,6 +1,6 @@
 package com.solvd.hospital.models.interfaces.functionalinterfaces;
 
 @FunctionalInterface
-public interface BiChecker<T,U> {
-	boolean check(T t, U u);
+public interface IModify<T,U> {
+	void modify(T t, U u);
 }

@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.solvd.hospital.models.exceptions.InsufficientFundsException;
 import com.solvd.hospital.models.healthfacilities.PrivateHospital;
-import com.solvd.hospital.models.interfaces.functionalinterfaces.Modifier;
+import com.solvd.hospital.models.interfaces.functionalinterfaces.IModify;
 import com.solvd.hospital.models.staff.Employee;
 
 public class Accountant extends Administrative {
@@ -26,7 +26,7 @@ public class Accountant extends Administrative {
 		}
 	}
 	
-	public void increaseSalary(Employee emp, double amount, Modifier<Employee,Double> increaser) {
+	public void increaseSalary(Employee emp, double amount, IModify<Employee,Double> increaser) {
 		LOGGER.info("Increasing salary of "+emp.getFirstName()+" "+emp.getLastName()+ ". Previous salary: $"+emp.getSalary());
 		increaser.modify(emp, amount);
 		LOGGER.info("New salary: $"+emp.getSalary());

@@ -1,5 +1,5 @@
 package com.solvd.hospital.models.interfaces.functionalinterfaces;
 
-public interface Printer<T> {
+public interface IPrint<T> {
 	void print(T type);
 }
