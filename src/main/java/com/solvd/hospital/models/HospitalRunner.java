@@ -12,7 +12,6 @@ import com.solvd.hospital.models.interfaces.functionalinterfaces.IBiCheck;
 import com.solvd.hospital.models.interfaces.functionalinterfaces.ICalculate;
 import com.solvd.hospital.models.interfaces.functionalinterfaces.IModify;
 import com.solvd.hospital.models.interfaces.functionalinterfaces.IPrint;
-import com.solvd.hospital.models.patientrelated.Appointment;
 import com.solvd.hospital.models.patientrelated.Patient;
 import com.solvd.hospital.models.staff.Employee;
 import com.solvd.hospital.models.staff.administrative.Accountant;
@@ -22,6 +21,8 @@ import com.solvd.hospital.models.staff.medicalstaff.Nurse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Random;
+import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -116,13 +117,8 @@ public class HospitalRunner {
 		
 		
 		//lambdas
-		ICalculate<PrivateHospital, Double> calculateAppointmentsIncome = (tmpPrivHosp) -> {
-			double total = 0;	
-			//privHosp.getAppoints().stream().
-			for (Appointment appoints : tmpPrivHosp.getAppoints()) {
-				total = total + appoints.getCost();
-			}
-			return total;
+		ICalculate<PrivateHospital, Double> calculateAppointmentsIncome = tmpPrivHosp -> {
+			return tmpPrivHosp.getAppoints().stream().collect(Collectors.summingDouble(appointment -> appointment.getCost()));
 		};
 		
 		IModify<Employee,Double> increaserByPercentage = (employee, percentage) -> employee.setSalary(employee.getSalary()+employee.getSalary()*percentage/100);
