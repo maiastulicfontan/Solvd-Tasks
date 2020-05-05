@@ -1,36 +1,38 @@
 package com.solvd.connectionpool;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ConnectionPoolRunner {
 	private final static Logger LOGGER =  LogManager.getLogger(ConnectionPoolRunner.class);
+		public static final int THREAD_POOL_SIZE = 10;
 
 	public static void main(String[] args) {
 		ConnectionPool pool = ConnectionPool.getInstance();
-		List <MyThread> threads = new ArrayList<MyThread>();
 		
-		for (int i = 0; i <= pool.getMAX_SIZE(); i++) {
-			threads.add(new MyThread("Thread"+i, pool));
+		ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+		
+		for (int i = 0; i < THREAD_POOL_SIZE; i++) {
+			executor.execute(new MyThread("Thread"+i, pool));
 		}
 		
-		
 		try {
-			pool.init();
+			executor.awaitTermination(5, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			LOGGER.error(e);
 		}
 		
 		
-		threads.forEach(thread -> thread.run());
+		
+
 		
 		
-		LOGGER.info("Connections in connection pool:" +pool);
 		
-		
-		threads.get(5).run();
 		
 		
 

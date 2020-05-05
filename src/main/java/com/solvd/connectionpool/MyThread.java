@@ -3,7 +3,7 @@ package com.solvd.connectionpool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MyThread implements Runnable {
+public class MyThread extends Thread implements Runnable  {
 	private static final Logger LOGGER = LogManager.getLogger(MyThread.class);
 	private String name;
 	private ConnectionPool connectionPool;
@@ -27,22 +27,15 @@ public class MyThread implements Runnable {
 		} catch (InterruptedException e) {
 			LOGGER.error(e);
 		} 
-		/*try {
+		try {
+			MyThread.sleep(5000);
 			connectionPool.releaseConnection(connection);
 		} catch (InterruptedException e) {
 			LOGGER.error(e);
-		}*/
+		}
 	}
 	
 
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 
 	@Override
