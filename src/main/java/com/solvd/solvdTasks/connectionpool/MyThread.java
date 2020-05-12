@@ -23,15 +23,16 @@ public class MyThread extends Thread implements Runnable  {
 				LOGGER.info(this.getName()+ " wasn't able to get a connection");
 			} else { 
 				LOGGER.info(this.getName()+ " has been assigned connection " + connection);
+				MyThread.sleep(5000);
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error(e);
-		} 
-		try {
-			MyThread.sleep(5000);
-			connectionPool.releaseConnection(connection);
-		} catch (InterruptedException e) {
-			LOGGER.error(e);
+		} finally {
+			try {
+				connectionPool.releaseConnection(connection);
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			}
 		}
 	}
 	

@@ -18,13 +18,19 @@ public class ConnectionPoolRunner {
 		ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 		
 		for (int i = 0; i < THREAD_POOL_SIZE; i++) {
-			executor.execute(new MyThread("Thread"+i, pool));
+			executor.execute(new MyThread("Thread "+i, pool));
 		}
 		
 		try {
-			executor.awaitTermination(5, TimeUnit.SECONDS);
+			executor.shutdown();
+			executor.awaitTermination(7, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			LOGGER.error(e);
+		} finally {
+			if (!executor.isTerminated()) {
+				LOGGER.info("Not all tasks were able to be completed");
+			}
+			executor.shutdownNow();
 		}
 		
 		
