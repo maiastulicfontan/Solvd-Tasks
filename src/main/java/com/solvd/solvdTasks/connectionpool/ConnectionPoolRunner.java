@@ -31,6 +31,7 @@ public class ConnectionPoolRunner {
 				LOGGER.info("Not all tasks were able to be completed");
 			}
 			executor.shutdownNow();
+			LOGGER.info("Finished shutdown");
 		}
 		
 		

@@ -1,5 +1,7 @@
 .log
 
+.bak
+
 *.classpath
 
 *.project

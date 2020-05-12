@@ -11,11 +11,11 @@ import org.apache.logging.log4j.Logger;
 
 public class ConnectionPool {
 	private final static Logger LOGGER = LogManager.getLogger(ConnectionPool.class);
-	private static BlockingQueue <String> connectionPoolQueue;
-	private static ConnectionPool cp;
-	private static AtomicInteger currentConnections = new AtomicInteger();
+	private BlockingQueue <String> connectionPoolQueue;
+	private ConnectionPool cp;
+	private AtomicInteger currentConnections = new AtomicInteger();
 	private static final int MAX_SIZE = 5;
-	private static ReentrantLock lock = new ReentrantLock();
+	private ReentrantLock lock = new ReentrantLock();
 	
 	private ConnectionPool() {
 		connectionPoolQueue = new LinkedBlockingQueue<>(MAX_SIZE);
